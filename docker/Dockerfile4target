@@ -2,8 +2,8 @@ FROM openjdk:8-jre-alpine
 WORKDIR /app
 WORKDIR /app/redis-manager
 
-COPY ./docker /app/
-COPY ./redis-manager-dashboard/target/redis-manager-dashboard-*.tar.gz /app/
+COPY ../docker /app/
+COPY ../redis-manager-dashboard/target/redis-manager-dashboard-*.tar.gz /app/
 
 RUN mv /app/redis-manager-dashboard-*.tar.gz /app/redis-manager.tar.gz \
     && rm -rf /app/redis-manager/* \
