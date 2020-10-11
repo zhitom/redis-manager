@@ -1,0 +1,19 @@
+FROM openjdk:8-jre-alpine
+WORKDIR /app
+WORKDIR /app/redis-manager
+
+COPY ./docker /app/
+COPY ./redis-manager-dashboard/target/redis-manager-dashboard-*.tar.gz /app/
+
+RUN mv /app/redis-manager-dashboard-*.tar.gz /app/redis-manager.tar.gz \
+    && rm -rf /app/redis-manager/* \
+    && mv /app/redis-manager.tar.gz ./redis-manager.tar.gz \
+    && tar -xfz redis-manager.tar.gz \
+    && rm redis-manager.tar.gz \
+    && mv /app/docker/redis-manager-start.sh /app/redis-manager \
+    && mv /app/docker/log4j2.xml /app/redis-manager/conf \
+    && cp conf/application.yml conf/application.yml.backup \
+    && cp -r data backup_data \
+    && rm -f conf/log4j2.xml 
+
+ENTRYPOINT ["sh","./redis-manager-start.sh"]
