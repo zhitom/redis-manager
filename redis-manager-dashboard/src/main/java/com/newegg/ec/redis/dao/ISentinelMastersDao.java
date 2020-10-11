@@ -75,7 +75,7 @@ public interface ISentinelMastersDao {
             "failover_timeout bigint(4) DEFAULT NULL,\n" +
             "parallel_syncs integer(4) DEFAULT NULL,\n" +
             "auth_pass varchar(255) DEFAULT NULL,\n" +
-            "update_time datetime(0) NOT NULL,\n" +
+            "update_time datetime NOT NULL,\n" +
             "PRIMARY KEY (sentinel_master_id),\n" +
             "UNIQUE KEY `master_name` (cluster_id, name) " +
             ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;")

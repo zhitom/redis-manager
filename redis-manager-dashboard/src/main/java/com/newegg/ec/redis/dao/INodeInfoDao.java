@@ -145,7 +145,7 @@ public interface INodeInfoDao {
             "`cpu_user` double(20, 2) NOT NULL, " +
             "`keys` integer(8) NOT NULL, " +
             "`expires` integer(8) NOT NULL, " +
-            "`update_time` datetime(0) NOT NULL, " +
+            "`update_time` datetime NOT NULL, " +
             "PRIMARY KEY (info_id), " +
             "INDEX `multiple_query`(`time_type`, `last_time`, `node`, `update_time`) " +
             ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;")

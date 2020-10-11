@@ -94,9 +94,9 @@ export default {
       if (isEmpty(value) || isEmpty(value.trim())) {
         return callback(new Error("Please enter redis node"));
       } else {
-        if (!validateIpAndPort(value)) {
-          return callback(new Error("Incorrect format"));
-        }
+        //if (!validateIpAndPort(value)) {
+        //  return callback(new Error("Incorrect format"));
+        //}
         callback();
       }
     };

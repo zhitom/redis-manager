@@ -64,8 +64,8 @@ public interface IRedisNodeDao {
             "`slot_number` integer(4) DEFAULT NULL, " +
             "`container_id` varchar(255) DEFAULT NULL, " +
             "`container_name` varchar(60) DEFAULT NULL, " +
-            "`insert_time` datetime(0) NOT NULL, " +
-            "`update_time` datetime(0) NOT NULL, " +
+            "`insert_time` datetime NOT NULL, " +
+            "`update_time` datetime NOT NULL, " +
             "PRIMARY KEY (redis_node_id), " +
             "INDEX `multiple_query`(`cluster_id`, `host`, `port`) " +
             ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;")

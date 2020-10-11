@@ -57,7 +57,7 @@ public interface IAlertRecordDao {
             "actual_data varchar(255) NOT NULL, " +
             "check_cycle integer(4) NOT NULL, " +
             "rule_info varchar(255) DEFAULT NULL, " +
-            "update_time datetime(0) NOT NULL, " +
+            "update_time datetime NOT NULL, " +
             "PRIMARY KEY (record_id) " +
             ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;")
     void createAlertRecordTable();

@@ -26,3 +26,9 @@ selenium-debug.log
 *.njsproj
 *.sln
 redis-manger-ui/redis-manager-vue/package-lock.json
+/redis-manager-dashboard/.classpath
+/redis-manager-dashboard/.project
+/redis-manager-dashboard/.settings/org.eclipse.core.resources.prefs
+/redis-manager-dashboard/.settings/org.eclipse.jdt.core.prefs
+/redis-manager-dashboard/.settings/org.eclipse.m2e.core.prefs
+/redis-manager-dashboard/logs/*.log

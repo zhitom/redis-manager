@@ -23,7 +23,7 @@ public interface IOperationLogDao {
             "user_ip varchar(50) DEFAULT NULL, " +
             "operation_info varchar(50) DEFAULT NULL, " +
             "request_params TEXT DEFAULT NULL, " +
-            "log_time datetime(0) NOT NULL, " +
+            "log_time datetime NOT NULL, " +
             "PRIMARY KEY (log_id) " +
             ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;")
     void createLogTable();

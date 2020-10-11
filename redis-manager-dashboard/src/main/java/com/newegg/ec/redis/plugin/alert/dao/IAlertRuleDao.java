@@ -80,8 +80,8 @@ public interface IAlertRuleDao {
             "valid tinyint(1) NOT NULL, " +
             "global tinyint(1) NOT NULL, " +
             "rule_info varchar(255) DEFAULT NULL, " +
-            "update_time datetime(0) NOT NULL, " +
-            "last_check_time datetime(0) NOT NULL, " +
+            "update_time datetime NOT NULL, " +
+            "last_check_time datetime NOT NULL, " +
             "PRIMARY KEY (rule_id) " +
             ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;")
     void createAlertChannelTable();

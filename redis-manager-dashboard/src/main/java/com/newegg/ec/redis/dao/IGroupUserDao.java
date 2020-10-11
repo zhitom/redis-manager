@@ -43,7 +43,7 @@ public interface IGroupUserDao {
             "user_role varchar(20) NOT NULL, " +
             "allowed_urls varchar(255) DEFAULT NULL, " +
             "grant_clusters varchar(255) DEFAULT NULL, " +
-            "update_time datetime(0) NOT NULL, " +
+            "update_time datetime NOT NULL, " +
             "PRIMARY KEY (group_user_id), " +
             "UNIQUE KEY `group_user` (user_id, group_id, grant_group_id, user_role) " +
             ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;")

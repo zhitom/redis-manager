@@ -73,7 +73,7 @@ public interface IAlertChannelDao {
             "channel_type integer(2) DEFAULT NULL, " +
             "channel_info varchar(255) DEFAULT NULL, " +
             "global tinyint(1) DEFAULT 1, " +
-            "update_time datetime(0) NOT NULL, " +
+            "update_time datetime NOT NULL, " +
             "PRIMARY KEY (channel_id) " +
             ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;")
     void createAlertChannelTable();

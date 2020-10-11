@@ -119,7 +119,7 @@ public interface IClusterDao {
             "cluster_alert tinyint(1) DEFAULT 1, " +
             "installation_environment integer(2) NOT NULL, " +
             "installation_type tinyint(1) NOT NULL, " +
-            "update_time datetime(0) NOT NULL, " +
+            "update_time datetime NOT NULL, " +
             "PRIMARY KEY (cluster_id), " +
             "UNIQUE KEY (cluster_name) " +
             ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;")

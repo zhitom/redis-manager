@@ -70,7 +70,7 @@ public interface IMachineDao {
             "token varchar(255) DEFAULT NULL, " +
             "machine_type integer(2) DEFAULT NULL, " +
             "machine_info varchar(255) DEFAULT NULL, " +
-            "update_time datetime(0) NOT NULL, " +
+            "update_time datetime NOT NULL, " +
             "PRIMARY KEY (machine_id) " +
             ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;")
     void createMachineTable();

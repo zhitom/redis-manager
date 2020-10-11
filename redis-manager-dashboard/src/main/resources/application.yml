@@ -42,16 +42,17 @@ spring:
       charset: UTF-8
   datasource:
     # 必填，与数据库同名
-    database: ${DATASOURCE_DATABASE:redis_manager}
+    database: ${DATASOURCE_DATABASE:redismanager}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DATASOURCE_URL:jdbc:mysql://localhost:3306/redis_manager?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8}
-    username: ${DATASOURCE_USERNAME:root}
-    password: ${DATASOURCE_PASSWORD:xxxxxx}
+    #url: ${DATASOURCE_URL:jdbc:mysql://localhost:3306/redismanager?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8}
+    url: ${DATASOURCE_URL:jdbc:mysql://link.aivanlink.com:23305/redismanager?useSSL=false&autoReconnect=true&failOverReadOnly=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai}
+    username: ${DATASOURCE_USERNAME:redismanager}
+    password: ${DATASOURCE_PASSWORD:redismanager@admin}
     #hikari数据库连接池
     hikari:
       pool-name: redis-manager-hikaricp
       # 最小空闲连接数量
-      minimum-idle: 10
+      minimum-idle: 1
       # 空闲连接存活最大时间，默认600000（10分钟）
       idle-timeout: 180000
       # 连接池最大连接数，默认是10
@@ -73,7 +74,7 @@ mybatis:
 redis-manager:
   auth:
     user-name: ${RM_AUTH_USERNAME:admin}
-    password: ${RM_AUTH_PASSWORD:admin}
+    password: ${RM_AUTH_PASSWORD:admin@demo}
     # avatar(absolute director)
     avatar-path: /data/avatar/
     authorization:

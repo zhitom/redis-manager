@@ -1,6 +1,6 @@
 FROM alpine/git
 WORKDIR /app
-RUN git clone https://github.com/ngbdf/redis-manager.git 
+RUN git clone https://github.com/zhitom/redis-manager.git 
 
 FROM maven:3.5-jdk-8-alpine
 COPY --from=0 /app/redis-manager /app/redis-manager 
