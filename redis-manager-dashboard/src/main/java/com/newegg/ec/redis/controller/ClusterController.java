@@ -7,6 +7,7 @@ import com.newegg.ec.redis.service.IClusterService;
 import com.newegg.ec.redis.service.IGroupService;
 import com.newegg.ec.redis.service.IRedisNodeService;
 import com.newegg.ec.redis.service.IRedisService;
+import com.newegg.ec.redis.util.RedisNodeUtil;
 import com.newegg.ec.redis.util.SignUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.PathParam;
 import java.util.*;
 
 /**
@@ -87,11 +87,8 @@ public class ClusterController {
             if (!addClusterResult) {
                 return Result.failResult();
             }
-            List<RedisNode> realRedisNodeList = redisService.getRedisNodeList(cluster);
-            realRedisNodeList.forEach(redisNode -> {
-                redisNode.setGroupId(cluster.getGroupId());
-                redisNode.setClusterId(cluster.getClusterId());
-            });
+            List<RedisNode> realRedisNodeList = redisService.getRealRedisNodeList(cluster);
+            RedisNodeUtil.setRedisRunStatus(cluster.getRedisMode(), realRedisNodeList);
             redisNodeService.addRedisNodeList(realRedisNodeList);
             return Result.successResult();
         } catch (Exception e) {
@@ -118,7 +115,7 @@ public class ClusterController {
             result.setMessage("Cluster name exist!");
             return result;
         }
-        boolean result = clusterService.updateCluster(cluster);
+        boolean result = clusterService.updateClusterMeta(cluster);
         if (!result) {
             return Result.failResult();
         }

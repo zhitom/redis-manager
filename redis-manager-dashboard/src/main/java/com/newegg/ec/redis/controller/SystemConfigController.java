@@ -46,12 +46,6 @@ public class SystemConfigController implements ApplicationListener<ContextRefres
         return Result.successResult(systemConfig.getHumpbackEnabled());
     }
 
-    @RequestMapping(value = "/getServerAddress", method = RequestMethod.GET)
-    @ResponseBody
-    public Result getServerAddress() throws SocketException {
-        return Result.successResult(LinuxInfoUtil.getIpAddress() + SignUtil.COLON + systemConfig.getServerPort());
-    }
-
     @RequestMapping(value = "/getAuthorization", method = RequestMethod.GET)
     @ResponseBody
     public Result getAuthorization() {

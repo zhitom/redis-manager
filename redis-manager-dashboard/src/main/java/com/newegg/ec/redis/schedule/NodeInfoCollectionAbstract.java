@@ -1,12 +1,11 @@
 package com.newegg.ec.redis.schedule;
 
-import com.newegg.ec.redis.client.RedisClientFactory;
-import com.newegg.ec.redis.client.RedisURI;
 import com.newegg.ec.redis.entity.*;
 import com.newegg.ec.redis.service.IClusterService;
 import com.newegg.ec.redis.service.INodeInfoService;
 import com.newegg.ec.redis.service.IRedisService;
 import com.newegg.ec.redis.util.RedisNodeInfoUtil;
+import com.newegg.ec.redis.util.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import redis.clients.jedis.HostAndPort;
 
 import java.util.*;
+
+import static com.newegg.ec.redis.client.RedisClient.SENTINEL;
 
 /**
  * @author Jay.H.Zou
@@ -49,15 +50,12 @@ public abstract class NodeInfoCollectionAbstract implements IDataCollection, App
         @Override
         public void run() {
             try {
-                int clusterId = cluster.getClusterId();
+                Integer clusterId = cluster.getClusterId();
                 logger.debug("Start collecting cluster: " + cluster.getClusterName());
                 List<NodeInfo> nodeInfoList = getNodeInfoList(cluster, timeType);
-                // clean last time data and save new data to db
+                // clean last time data and save new last data to db
                 NodeInfoParam nodeInfoParam = new NodeInfoParam(clusterId, timeType);
                 nodeInfoService.addNodeInfo(nodeInfoParam, nodeInfoList);
-                if (TimeType.MINUTE.equals(timeType)) {
-                    clusterService.updateCluster(cluster);
-                }
             } catch (Exception e) {
                 logger.error("Collect " + timeType + " data for " + cluster.getClusterName() + " failed.", e);
             }
@@ -74,6 +72,9 @@ public abstract class NodeInfoCollectionAbstract implements IDataCollection, App
             if (nodeInfo == null) {
                 continue;
             }
+            if (SENTINEL.equalsIgnoreCase(cluster.getRedisMode())) {
+                nodeInfo.setRole(NodeRole.MASTER);
+            }
             nodeInfo.setNode(hostAndPort.toString());
             nodeInfoList.add(nodeInfo);
         }
@@ -81,7 +82,7 @@ public abstract class NodeInfoCollectionAbstract implements IDataCollection, App
     }
 
     private Set<HostAndPort> getHostAndPortSet(Cluster cluster) {
-        List<RedisNode> redisNodeList = redisService.getRedisNodeList(cluster);
+        List<RedisNode> redisNodeList = redisService.getRealRedisNodeList(cluster);
         Set<HostAndPort> hostAndPortSet = new HashSet<>();
         for (RedisNode redisNode : redisNodeList) {
             hostAndPortSet.add(new HostAndPort(redisNode.getHost(), redisNode.getPort()));
@@ -105,7 +106,7 @@ public abstract class NodeInfoCollectionAbstract implements IDataCollection, App
             nodeInfo.setLastTime(true);
             nodeInfo.setTimeType(timeType);
         } catch (Exception e) {
-            logger.error("Build node info failed, node = " + node, e);
+            logger.error(String.format("Build node info failed, cluster id = %d, node = %s", clusterId, node), e);
         }
         return nodeInfo;
     }

@@ -12,6 +12,10 @@ import java.sql.Timestamp;
  */
 public class RedisNode {
 
+    public static final String CONNECTED = "connected";
+
+    public static final String UNCONNECTED = "unconnected";
+
     /**
      * mysql table id
      */
@@ -35,7 +39,6 @@ public class RedisNode {
     private NodeRole nodeRole;
 
     /**
-     * 节点状态: 当节点为 myself. master, slave 时, 此值为空
      * myself: 当前连接的节点
      * master: 节点是master.
      * slave: 节点是slave.
@@ -63,8 +66,6 @@ public class RedisNode {
     private boolean inCluster;
 
     private boolean runStatus;
-
-    private boolean inDatabase;
 
     private Timestamp insertTime;
 
@@ -234,14 +235,6 @@ public class RedisNode {
 
     public void setRunStatus(boolean runStatus) {
         this.runStatus = runStatus;
-    }
-
-    public boolean getInDatabase() {
-        return inDatabase;
-    }
-
-    public void setInDatabase(boolean inDatabase) {
-        this.inDatabase = inDatabase;
     }
 
     public Timestamp getInsertTime() {

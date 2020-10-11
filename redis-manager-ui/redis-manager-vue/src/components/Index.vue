@@ -91,24 +91,41 @@
                 <i class="el-icon-discover"></i>
                 <span slot="title">Dashboard</span>
               </el-menu-item>
-              <el-menu-item index="2" @click="toInstallation()" v-if="currentUser.userRole < 2">
-                <i class="el-icon-setting"></i>
-                <span slot="title">Installation</span>
-              </el-menu-item>
-              <el-submenu index="3" v-if="currentUser.userRole < 2">
+              <el-submenu index="2" v-if="currentUser.userRole < 2">
                 <template slot="title">
                   <i class="el-icon-bell"></i>
                   <span>Alert Manage</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="3-1" @click="toChannelManage()">Channel Manage</el-menu-item>
-                  <el-menu-item index="3-2" @click="toRuleManage()">Rule Manage</el-menu-item>
+                  <el-menu-item index="2-1" @click="toChannelManage()">Channel Manage</el-menu-item>
+                  <el-menu-item index="2-2" @click="toRuleManage()">Rule Manage</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
-              <el-menu-item index="4" @click="toMachineManage()" v-if="currentUser.userRole < 2">
-                <i class="el-icon-monitor"></i>
-                <span slot="title">Machine Manage</span>
-              </el-menu-item>
+              <el-submenu index="3" v-if="currentUser.userRole < 2">
+                <template slot="title">
+                  <i class="el-icon-setting"></i>
+                  <span slot="title">Installation</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="3-1" @click="toInstallation()">Installation</el-menu-item>
+                  <el-menu-item index="3-2" @click="toMachineManage()">Machine Manage</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+               <el-submenu index="4" v-if="currentUser.userRole < 2">
+                <template slot="title">
+                  <i class="el-icon-cpu"></i>
+                  <span>RCT</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="4-1" @click="toRct()">Config</el-menu-item>
+                </el-menu-item-group>
+                <!-- <el-menu-item-group>
+                  <el-menu-item index="9-2" @click="toTaskProgress()">TaskProgress</el-menu-item>
+                </el-menu-item-group> -->
+                <el-menu-item-group>
+                  <el-menu-item index="4-2" @click="toJobList()">Job List</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
               <el-submenu index="5">
                 <template slot="title">
                   <i class="el-icon-takeaway-box"></i>
@@ -212,7 +229,23 @@ export default {
       this.$router.push({
         name: "channel-manage",
         params: { groupId: this.selectGroupId }
-      });
+      })
+    },
+    toJobList () {
+      this.$router.push({
+        name: 'jobList',
+        params: { groupId: this.selectGroupId }
+      })
+    },
+    toRct () {
+      this.$router.push({
+        name: 'Config'
+      })
+    },
+    toTaskProgress () {
+      this.$router.push({
+        name: 'TaskProgress'
+      })
     },
     toRuleManage() {
       this.$router.push({

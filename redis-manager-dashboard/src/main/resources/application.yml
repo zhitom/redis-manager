@@ -1,5 +1,5 @@
 server:
-  # 开启压缩
+  tomcat.uri-encoding: UTF-8
   compression:
     enabled: true
     mime-types:
@@ -12,10 +12,26 @@ server:
       - application/octet-stream
       - application/json
     min-response-size: 1024
-  tomcat.uri-encoding: UTF-8
   port: ${SERVER_PORT:8182}
 
+eureka:
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 10000
+    max-threads-for-peer-replication: 0
+  dashboard:
+    path: /eureka-ui
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
 spring:
+  devtools:
+    restart:
+      enabled: false
+  freemarker:
+    template-loader-path: classpath:/templates/
+    prefer-file-system-access: false
   application:
     name: redis-manager
   resources:
@@ -28,9 +44,9 @@ spring:
     # 必填，与数据库同名
     database: ${DATASOURCE_DATABASE:redis_manager}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DATASOURCE_URL:jdbc:mysql://127.0.0.1:3306/redis_manager?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2b8}
+    url: ${DATASOURCE_URL:jdbc:mysql://localhost:3306/redis_manager?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8}
     username: ${DATASOURCE_USERNAME:root}
-    password: ${DATASOURCE_PASSWORD:xxx}
+    password: ${DATASOURCE_PASSWORD:xxxxxx}
     #hikari数据库连接池
     hikari:
       pool-name: redis-manager-hikaricp
@@ -47,10 +63,10 @@ spring:
       # 数据库连接超时时间,默认30秒，即30000
       connection-timeout: 30000
       connection-test-query: 'SELECT 1'
-
 mybatis:
   configuration:
     mapUnderscoreToCamelCase: true
+
 
 # http://download.redis.io/releases/
 # redis manager configuration
@@ -74,6 +90,8 @@ redis-manager:
     slow-log-limit: 100
   # installation configuration
   installation:
+    # 当前主机的 ip，非必须填写，如果使用集群安装无法获取主机IP导致无法安装，请在此填写
+    current-host:
     # redis.conf(absolute director)
     conf-path: /data/conf/
     # physics machine
@@ -91,3 +109,21 @@ redis-manager:
       humpback-host: http://%s:8500/dockerapi/v2/
   alert:
     data-keep-days: 15
+  rct:
+    email:
+      smtp:
+      from-name:
+      user-name:
+      password:
+      subject: Redis Analyze Report
+    dev:
+      enable: false
+      rdb:
+        port: 9002
+
+logging:
+  level:
+    com:
+      netflix:
+        eureka: OFF
+        discovery: OFF

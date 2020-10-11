@@ -2,6 +2,7 @@ package com.newegg.ec.redis.config;
 
 import com.google.common.base.Strings;
 import com.newegg.ec.redis.exception.ConfigurationException;
+import com.newegg.ec.redis.util.LinuxInfoUtil;
 import com.newegg.ec.redis.util.SignUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
@@ -11,7 +12,9 @@ import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerF
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.unit.DataSize;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.async.TimeoutCallableProcessingInterceptor;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -20,8 +23,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import javax.servlet.MultipartConfigElement;
 import java.io.File;
 
-import static com.newegg.ec.redis.util.RedisUtil.CLUSTER;
-import static com.newegg.ec.redis.util.RedisUtil.STANDALONE;
+import static com.newegg.ec.redis.util.RedisUtil.REDIS_MODE_CLUSTER;
+import static com.newegg.ec.redis.util.RedisUtil.REDIS_MODE_STANDALONE;
 import static com.newegg.ec.redis.util.TimeUtil.FIVE_MINUTES;
 
 /**
@@ -67,6 +70,9 @@ public class SystemConfig implements WebMvcConfigurer {
     @Value("${redis-manager.installation.humpback.enabled:false}")
     private boolean humpbackEnabled;
 
+    @Value("${redis-manager.installation.current-host}")
+    private String currentHost;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         if (Strings.isNullOrEmpty(configPath)) {
@@ -74,9 +80,9 @@ public class SystemConfig implements WebMvcConfigurer {
         }
         File file = new File(configPath);
         if (!file.exists()) {
-            File clusterConfPath = new File(configPath + CLUSTER);
+            File clusterConfPath = new File(configPath + REDIS_MODE_CLUSTER);
             clusterConfPath.mkdirs();
-            File standaloneConfPath = new File(configPath + STANDALONE);
+            File standaloneConfPath = new File(configPath + REDIS_MODE_STANDALONE);
             standaloneConfPath.mkdirs();
         }
 
@@ -113,6 +119,14 @@ public class SystemConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    public RestTemplate buildRestTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setReadTimeout(10000);
+        factory.setConnectTimeout(15000);
+        return new RestTemplate(factory);
+    }
+
+    @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         //文件最大KB,MB
@@ -124,6 +138,7 @@ public class SystemConfig implements WebMvcConfigurer {
 
     /**
      * for vue history mode
+     *
      * @return
      */
     @Bean
@@ -163,5 +178,13 @@ public class SystemConfig implements WebMvcConfigurer {
 
     public boolean getHumpbackEnabled() {
         return humpbackEnabled;
+    }
+
+    public String getCurrentHost() {
+        String host = currentHost;
+        if (!Strings.isNullOrEmpty(host)) {
+            return currentHost;
+        }
+        return LinuxInfoUtil.getIp();
     }
 }

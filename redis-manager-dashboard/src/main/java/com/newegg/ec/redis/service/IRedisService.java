@@ -17,6 +17,8 @@ public interface IRedisService {
 
     Map<String, String> getNodeInfo(HostAndPort hostAndPort, String redisPassword);
 
+    Map<String, String> getNodeInfo(HostAndPort hostAndPort, String redisPassword, String section);
+
     /**
      * Get keyspace info
      * <p>
@@ -27,11 +29,10 @@ public interface IRedisService {
      */
     Map<String, Map<String, Long>> getKeyspaceInfo(Cluster cluster);
 
-    Map<String, Long> getTotalMemoryInfo(Cluster cluster);
+    Long getTotalMemoryInfo(Cluster cluster);
 
     /**
      * Get database
-     * <p>
      * eg: db1 = 12345
      *
      * @param cluster
@@ -40,12 +41,12 @@ public interface IRedisService {
     Map<String, Long> getDatabase(Cluster cluster);
 
     /**
-     * Get node list
+     * Get real redis node list
      *
      * @param cluster
      * @return
      */
-    List<RedisNode> getRedisNodeList(Cluster cluster);
+    List<RedisNode> getRealRedisNodeList(Cluster cluster);
 
     /**
      * Get node list
@@ -158,4 +159,17 @@ public interface IRedisService {
      */
     void autoGenerateConfigFile(Cluster cluster);
 
+    List<SentinelMaster> getSentinelMasters(Cluster cluster);
+
+    Map<String, String> getSentinelMasterInfoByName(SentinelMaster sentinelMaster);
+
+    boolean monitorMaster(SentinelMaster sentinelMaster);
+
+    boolean sentinelSet(SentinelMaster sentinelMaster);
+
+    boolean failoverMaster(SentinelMaster sentinelMaster);
+
+    boolean sentinelRemove(SentinelMaster sentinelMaster);
+
+    List<Map<String, String>> sentinelSlaves(SentinelMaster sentinelMaster);
 }

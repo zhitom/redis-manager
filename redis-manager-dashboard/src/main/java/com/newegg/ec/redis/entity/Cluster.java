@@ -26,6 +26,8 @@ import java.sql.Timestamp;
  */
 public class Cluster {
 
+    public static String UNKNOWN_VALUE = "unknown";
+
     private Integer clusterId;
 
     private Integer groupId;
@@ -41,11 +43,11 @@ public class Cluster {
 
     private String nodes;
 
-    private String redisMode;
+    private String redisMode = UNKNOWN_VALUE;
 
-    private String os;
+    private String os = UNKNOWN_VALUE;
 
-    private String redisVersion;
+    private String redisVersion = UNKNOWN_VALUE;
 
     private String image;
 
@@ -57,53 +59,59 @@ public class Cluster {
     /**
      * 集群 key 总数
      */
-    private long totalKeys;
+    private long totalKeys = 0;
 
     /**
      * 集群 expire 总数
      */
-    private long totalExpires;
+    private long totalExpires = 0;
 
-    private long totalUsedMemory;
+    private long totalUsedMemory = 0;
 
-    private int dbSize;
+    private int dbSize = 0;
 
     /**
      *
      */
-    private ClusterState clusterState;
+    private ClusterState clusterState = ClusterState.HEALTH;
 
     /**
      * 已分配到集群节点的哈希槽数量（不是没有被绑定的数量）。16384个哈希槽全部被分配到集群节点是集群正常运行的必要条件
      */
-    private int clusterSlotsAssigned;
+    private int clusterSlotsAssigned = 0;
 
     /**
      * 哈希槽状态不是FAIL 和 PFAIL 的数量
      */
-    private int clusterSlotsOk;
+    private int clusterSlotsOk = 0;
 
     /**
      * 哈希槽状态是 PFAIL的数量。只要哈希槽状态没有被升级到FAIL状态，这些哈希槽仍然可以被正常处理。
      * PFAIL状态表示我们当前不能和节点进行交互，但这种状态只是临时的错误状态。
      */
-    private int clusterSlotsPfail;
+    private int clusterSlotsPfail = 0;
 
     /**
      * 哈希槽状态是FAIL的数量。如果值不是0，那么集群节点将无法提供查询服务，
      * 除非cluster-require-full-coverage被设置为no
      */
-    private int clusterSlotsFail;
+    private int clusterSlotsFail = 0;
 
     /**
      * The total number of known nodes in the cluster, including nodes in HANDSHAKE state that may not currently be proper members of the cluster.
      */
-    private int clusterKnownNodes;
+    private int clusterKnownNodes = 0;
 
     /**
      * The number of master nodes serving at least one hash slot in the cluster.
      */
-    private int clusterSize;
+    private int clusterSize = 0;
+
+    private int sentinelOk = 0;
+
+    private int sentinelMasters = 0;
+
+    private int masterOk = 0;
 
     private String redisPassword;
 
@@ -122,12 +130,22 @@ public class Cluster {
     private Timestamp updateTime;
 
     public enum ClusterState {
-        UNKNOWN,
 
+        /**
+         * cluster info state: ok
+         */
         HEALTH,
 
+        /**
+         * cluster info state not ok
+         * can't get cluster info
+         */
         BAD,
 
+        /**
+         * redis node not good
+         *
+         */
         WARN;
     }
 
@@ -305,6 +323,30 @@ public class Cluster {
 
     public void setClusterSize(int clusterSize) {
         this.clusterSize = clusterSize;
+    }
+
+    public int getSentinelOk() {
+        return sentinelOk;
+    }
+
+    public void setSentinelOk(int sentinelOk) {
+        this.sentinelOk = sentinelOk;
+    }
+
+    public int getSentinelMasters() {
+        return sentinelMasters;
+    }
+
+    public void setSentinelMasters(int sentinelMasters) {
+        this.sentinelMasters = sentinelMasters;
+    }
+
+    public int getMasterOk() {
+        return masterOk;
+    }
+
+    public void setMasterOk(int masterOk) {
+        this.masterOk = masterOk;
     }
 
     public String getRedisPassword() {
