@@ -11,6 +11,7 @@ import com.newegg.ec.redis.schedule.RDBScheduleJob;
 import com.newegg.ec.redis.service.IRdbAnalyzeResultService;
 import com.newegg.ec.redis.service.IRdbAnalyzeService;
 import com.newegg.ec.redis.service.impl.ScheduleTaskService;
+
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -134,6 +137,12 @@ public class InitializeConfiguration implements ApplicationListener<ContextRefre
         if (existUser != null) {
             user.setUserId(existUser.getUserId());
         } else {
+        	try {
+    			user.setPassword(IUserDao.encoderByMd5(user.getPassword()));
+    		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+    			LOG.error("error md5: user.getPassword()={}", user.getPassword());
+                return ;
+    		}
             userDao.insertUser(user);
         }
         User existGroupUser = userDao.selectUserRole(user.getGroupId(), user.getUserId());

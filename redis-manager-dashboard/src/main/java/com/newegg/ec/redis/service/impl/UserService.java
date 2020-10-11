@@ -7,12 +7,15 @@ import com.newegg.ec.redis.entity.Group;
 import com.newegg.ec.redis.entity.User;
 import com.newegg.ec.redis.service.IUserService;
 import com.newegg.ec.redis.util.ImageUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static com.newegg.ec.redis.config.SystemConfig.AVATAR_PATH;
@@ -69,6 +72,7 @@ public class UserService implements IUserService {
     @Override
     public User getUserByNameAndPassword(User user) {
         try {
+        	user.setPassword(IUserDao.encoderByMd5(user.getPassword()));
             User userLogin = userDao.selectUserByNameAndPassword(user);
             if (userLogin == null) {
                 return null;
@@ -107,7 +111,12 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public boolean addUser(User user) {
-
+    	try {
+			user.setPassword(IUserDao.encoderByMd5(user.getPassword()));
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			logger.error("error md5: user.getPassword()={}", user.getPassword());
+            return false;
+		}
         userDao.insertUser(user);
         String avatar = AVATAR_PATH + ImageUtil.getImageName(user.getUserId());
         user.setAvatar(avatar);
@@ -164,6 +173,12 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public boolean updateUser(User user) {
+    	try {
+			user.setPassword(IUserDao.encoderByMd5(user.getPassword()));
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			logger.error("error md5: user.getPassword()={}", user.getPassword());
+            return false;
+		}
         userDao.updateUser(user);
         groupUserDao.updateUserRole(user);
         return true;

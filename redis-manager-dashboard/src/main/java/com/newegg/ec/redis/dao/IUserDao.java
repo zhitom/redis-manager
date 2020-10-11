@@ -1,8 +1,14 @@
 package com.newegg.ec.redis.dao;
 
 import com.newegg.ec.redis.entity.User;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.ibatis.annotations.*;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -14,6 +20,24 @@ import java.util.List;
 @Mapper
 public interface IUserDao {
 
+	/**利用MD5进行加密*/
+	  public static String encoderByMd5(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+	    //确定计算方法
+	    MessageDigest md5=MessageDigest.getInstance("MD5");
+	    //加密后的字符串
+	    return Base64.encodeBase64String(md5.digest(str.getBytes(StandardCharsets.UTF_8)));
+	  }
+	   
+//	  /**判断用户密码是否正确
+//	   *newpasswd 用户输入的密码
+//	   *oldpasswd 正确密码*/
+//	  public static boolean checkpassword(String newpasswd,String oldpasswd) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+//	    if(EncoderByMd5(newpasswd).equals(oldpasswd))
+//	      return true;
+//	    else
+//	      return false;
+//	  }
+	  
     @Select("SELECT * FROM `user`")
     List<User> selectAllUser();
 
@@ -77,7 +101,7 @@ public interface IUserDao {
             "AND group_user.user_id = #{userId}")
     User selectUserRole(@Param("grantGroupId") Integer grantGroupId, @Param("userId") Integer userId);
 
-    @Select("SELECT * FROM `user`WHERE user_name = #{userName} AND password = #{password}")
+    @Select("SELECT * FROM `user`WHERE user_name = #{userName} AND (password = #{password} OR password is null OR password='')")
     User selectUserByNameAndPassword(User user);
 
     @Select("SELECT * FROM user WHERE user_name = #{userName}")
