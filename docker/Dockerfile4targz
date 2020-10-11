@@ -9,7 +9,7 @@ COPY ./redis-manager-dashboard-*.tar.gz /app/
 RUN mv /app/redis-manager-dashboard-*.tar.gz /app/redis-manager.tar.gz \
     && rm -rf /app/redis-manager/* \
     && mv /app/redis-manager.tar.gz ./redis-manager.tar.gz \
-    && tar -xfz redis-manager.tar.gz \
+    && tar -xf redis-manager.tar.gz \
     && rm redis-manager.tar.gz \
     && mv /app/redis-manager-start.sh /app/redis-manager \
     && mv /app/log4j2.xml /app/redis-manager/conf \
